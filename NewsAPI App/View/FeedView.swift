@@ -7,49 +7,87 @@
 
 import SwiftUI
 
-final class FeedViewModel : ObservableObject {
-    @Published var datas = [DataType]()
-    
-    func loadNews(word : String) async throws {
-        
-    }
-}
-
 struct FeedView: View {
     @ObservedObject var list = getNews()
-    @State private var searchWord : String = ""
+    @State private var searchTerm = ""
     var body: some View {
         NavigationStack {
-            VStack {
-                
-                TextField("Enter Location", text: $searchWord)
-                    .padding()
-                    .frame(width: UIScreen.main.bounds.width, height: 40)
-                    .padding(.horizontal, 10)
-                List(list.datas) { new in
-                    HStack {
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text(new.title)
-                                .fontWeight(.heavy)
-                            Text(new.description).lineLimit(2)
-                                .fontWeight(.light)
-                                .font(.caption)
+                VStack {
+                        SearchBar(text: $searchTerm) {
+                            list.datas.removeAll()
+                            list.fetchNews(with: searchTerm)
                         }
                         
-                        AsyncImage(url: URL(string: new.image)) { returnedImage in
-                            returnedImage
-                                .resizable()
-                                .frame(width: 110, height: 135)
-                                .scaledToFill()
-                                .clipShape(RoundedRectangle(cornerRadius: 15))
-                                .padding(.leading, 10)
-                        } placeholder: {
-                            ProgressView()
+                        List {
+                            ForEach(0..<list.datas.count, id: \.self) { i in
+                                NavigationLink(value: list.datas[i]) {
+                                    VStack {
+                                        AsyncImage(url: URL(string: list.datas[i].urlToImage)) { returnedImage in
+                                            returnedImage
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fill)
+                                                .scaledToFit()
+                                        } placeholder: {
+                                            ProgressView()
+                                        }
+                                        VStack(alignment: .leading, spacing: 10) {
+                                            Text(list.datas[i].title)
+                                                .font(.headline)
+                                            Text(list.datas[i].description).lineLimit(1)
+                                                .fontWeight(.light)
+                                                .font(.caption)
+                                                .foregroundStyle(.secondary)
+                                            
+                                            HStack {
+                                                Text(list.datas[i].captionText)
+                                                    .foregroundStyle(.secondary)
+                                                    .font(.caption)
+                                                    .fontWeight(.thin)
+                                                
+                                                Spacer()
+                                                
+                                                Button {
+                                                    
+                                                } label: {
+                                                    Image(systemName: "bookmark")
+                                                        
+                                                }
+                                                .buttonStyle(.bordered)
+                                                .clipShape(Circle())
+                                                Button{
+                                                    
+                                                } label: {
+                                                    Image(systemName: "square.and.arrow.up")
+                                                }.buttonStyle(.bordered)
+                                                    .clipShape(Circle())
+                                            }.padding(.top,5)
+                                        }
+                                            
+                                        
+                                        
+                                    }
+                                }
+                                .padding(.bottom, 15)
+                                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                    .listRowSeparator(.hidden)
+                                    
+                            }
+                            
+                            
                         }
-
-                    }
+                        .listStyle(.plain)
+                        .navigationDestination(for: New.self) { new in
+                            NewView(new: new)
+                        }
+                        
+                    }.padding(.vertical)
+                    .navigationTitle("News")
+                    .onAppear {
+                            list.fetchNews()
                 }
-            }.navigationTitle("News")
+            
+                    
+            
         }
     }
 }
@@ -57,3 +95,28 @@ struct FeedView: View {
 #Preview {
     FeedView()
 }
+
+struct SearchBar: View {
+    @Binding var text: String
+    var onSearchButtonClicked: () -> Void
+    
+    var body: some View {
+        HStack {
+            TextField("Search", text: $text)
+                .padding(8)
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
+            
+            Button(action: {
+                onSearchButtonClicked()
+            }) {
+                Image(systemName: "magnifyingglass")
+                    .foregroundColor(.gray)
+            }
+            .padding(8)
+        }
+        .padding(.horizontal)
+        .padding(.bottom, 12)
+    }
+}
+
