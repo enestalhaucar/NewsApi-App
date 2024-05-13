@@ -11,41 +11,39 @@ import WebKit
 struct NewView: View {
     @EnvironmentObject var savedViewModel : SavedViewModel
     let new : New
-    func shareNew() {
-        let activityViewController = UIActivityViewController(activityItems: [new.title, new.url], applicationActivities: nil)
-        UIApplication.shared.windows.first?.rootViewController?.present(activityViewController, animated: true, completion: nil)
-    }
-    private func toggleBookmark(for new : New) {
-        if savedViewModel.isSaved(for: new) {
-            savedViewModel.removeNew(for: new)
-        }else {
-            savedViewModel.saveNew(for: new)
-        }
-    }
+    
     var body: some View {
         
-        
-        
-        ScrollView {
-            VStack(alignment: .center) {
-                VStack(alignment : .leading) {
+        VStack {
+            VStack {
+                VStack(alignment: .center) {
                     AsyncImage(url: URL(string: new.urlToImage)) { returnedImage in
                         returnedImage
                             .resizable()
-                            .frame(width: UIScreen.main.bounds.width * 9 / 10, height: 300)
-                            .scaledToFit()
+                            .frame(width: UIScreen.main.bounds.width * 9.5 / 10, height: 300)
+                            .scaledToFill()
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                         
                     } placeholder: {
                         ProgressView()
                     }
-                    
-                    
+                }
+                
+                
+                
+                VStack(alignment: .leading) {
                     Text(new.title)
-                        .fontWeight(.heavy)
-                        .font(.headline)
+                            .fontWeight(.heavy)
+                            .font(.headline)
                         .padding(.vertical,10)
-                    
+                        .padding(.horizontal)
+                        
+                        .frame(width: UIScreen.main.bounds.width, alignment: .leading)
+                        
+                }
+                
+                
+                VStack(alignment: .center) {
                     HStack {
                         HStack {
                             Image(systemName: "person.fill")
@@ -55,59 +53,66 @@ struct NewView: View {
                         HStack {
                             Image(systemName: "calendar")
                             
-                            Text(new.publishedAt.description)
+                            Text(savedViewModel.changeDateToString(publishedAt: new.publishedAt))
                         }
                     }
-                    
+                }
+                
+                ScrollView {
                     Text(new.description)
                         .font(.subheadline)
                         .fontWeight(.medium)
-                    
                 }
                 
-                Spacer()
-                
-                NavigationLink(value: new.url) {
-                    Text("News Source")
-                        .frame(width: UIScreen.main.bounds.width * 7 / 10, height: 40)
-                        .background(.yellow)
-                        .foregroundStyle(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 10.0))
-                        .padding(.vertical, 10)
-                }
-                
-                
-                
-                
-                
-                
-            }.toolbar{
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        toggleBookmark(for: new)
-                    } label: {
-                        Image(systemName: savedViewModel.isSaved(for: new) ? "bookmark.fill" : "bookmark")
-                    }
-                    .buttonStyle(.bordered)
-                    .clipShape(Circle())
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                       shareNew()
-                    } label: {
-                        Image(systemName: "square.and.arrow.up")
-                    }
-                    .buttonStyle(.bordered)
-                    .clipShape(Circle())
-                }
             }
-            .navigationDestination(for: String.self, destination: { value in
-                WebView(url: value)
-                    .navigationTitle("")
-                    .navigationBarTitleDisplayMode(.inline)
-            })
-            .padding()
+            
+            Spacer()
+            Spacer()
+            Spacer()
+            
+            NavigationLink(value: new.url) {
+                Text("News Source")
+                    .frame(width: UIScreen.main.bounds.width * 7 / 10, height: 40)
+                    .background(.yellow)
+                    .foregroundStyle(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                    .padding(.vertical, 10)
+            }
+            
+            
+            
+            
+            
+            
+        }.toolbar{
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    savedViewModel.toggleBookmark(for: new)
+                } label: {
+                    Image(systemName: savedViewModel.isSaved(for: new) ? "bookmark.fill" : "bookmark")
+                }
+                .buttonStyle(.bordered)
+                .clipShape(Circle())
+                
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    savedViewModel.shareNew(new: new)
+                } label: {
+                    Image(systemName: "square.and.arrow.up")
+                }
+                .buttonStyle(.bordered)
+                .clipShape(Circle())
+            }
         }
+        
+        .navigationDestination(for: String.self, destination: { value in
+            WebView(url: value)
+                .navigationTitle("")
+                .navigationBarTitleDisplayMode(.inline)
+        })
+        .padding()
+        
         
         
     }

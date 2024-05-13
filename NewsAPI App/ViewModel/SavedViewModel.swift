@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 
 @MainActor
@@ -30,5 +31,23 @@ class SavedViewModel : ObservableObject {
         savedNews.remove(at: index)
     }
     
+    func shareNew(new : New) {
+        let activityViewController = UIActivityViewController(activityItems: [new.title, new.url], applicationActivities: nil)
+        UIApplication.shared.windows.first?.rootViewController?.present(activityViewController, animated: true, completion: nil)
+    }
+    func toggleBookmark(for new : New) {
+        if isSaved(for: new) {
+            removeNew(for: new)
+        }else {
+            saveNew(for: new)
+        }
+    }
     
+    func changeDateToString(publishedAt : Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let publishedAtString = dateFormatter.string(from: publishedAt)
+        
+        return publishedAtString
+    }
 }

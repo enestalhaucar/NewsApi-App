@@ -11,10 +11,7 @@ struct FeedView: View {
     @ObservedObject var list = getNews()
     @EnvironmentObject var savedViewModel : SavedViewModel
     @State private var searchTerm = ""
-    func shareNew(new : New) {
-        let activityViewController = UIActivityViewController(activityItems: [new.title, new.url], applicationActivities: nil)
-        UIApplication.shared.windows.first?.rootViewController?.present(activityViewController, animated: true, completion: nil)
-    }
+    
     var body: some View {
         ZStack {
             
@@ -23,11 +20,12 @@ struct FeedView: View {
                 VStack {
                     SearchBar(text: $searchTerm) {
                         list.datas.removeAll()
-                        list.fetchNews(with: searchTerm)
+                        list.fetchNews(with: searchTerm.isEmpty ? "keyword" : searchTerm)
                     }
                     
                     List {
                         ForEach(0..<list.datas.count, id: \.self) { i in
+                            
                             NavigationLink(value: list.datas[i]) {
                                 VStack {
                                     AsyncImage(url: URL(string: list.datas[i].urlToImage)) { returnedImage in
@@ -55,7 +53,7 @@ struct FeedView: View {
                                             Spacer()
                                             
                                             Button {
-                                                toggleBookmark(for: list.datas[i])
+                                                savedViewModel.toggleBookmark(for: list.datas[i])
                                             } label: {
                                                 Image(systemName: savedViewModel.isSaved(for: list.datas[i]) ? "bookmark.fill" : "bookmark")
                                                 
@@ -63,7 +61,7 @@ struct FeedView: View {
                                             .buttonStyle(.bordered)
                                             .clipShape(Circle())
                                             Button{
-                                                shareNew(new: list.datas[i])
+                                                savedViewModel.shareNew(new: list.datas[i])
                                             } label: {
                                                 Image(systemName: "square.and.arrow.up")
                                             }.buttonStyle(.bordered)
@@ -80,6 +78,7 @@ struct FeedView: View {
                             .listRowSeparator(.hidden)
                             
                         }
+                        
                         
                         
                     }
@@ -102,13 +101,7 @@ struct FeedView: View {
         }
     }
     
-    private func toggleBookmark(for new : New) {
-        if savedViewModel.isSaved(for: new) {
-            savedViewModel.removeNew(for: new)
-        }else {
-            savedViewModel.saveNew(for: new)
-        }
-    }
+    
 }
 
 #Preview {
