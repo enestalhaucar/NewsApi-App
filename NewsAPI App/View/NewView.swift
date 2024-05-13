@@ -10,7 +10,14 @@ import WebKit
 
 struct NewView: View {
     let new : New
+    func shareNew() {
+        let activityViewController = UIActivityViewController(activityItems: [new.title, new.url], applicationActivities: nil)
+        UIApplication.shared.windows.first?.rootViewController?.present(activityViewController, animated: true, completion: nil)
+    }
     var body: some View {
+        
+        
+        
         ScrollView {
             VStack(alignment: .center) {
                 VStack(alignment : .leading) {
@@ -78,7 +85,7 @@ struct NewView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        
+                       shareNew()
                     } label: {
                         Image(systemName: "square.and.arrow.up")
                     }

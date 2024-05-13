@@ -10,6 +10,10 @@ import SwiftUI
 struct FeedView: View {
     @ObservedObject var list = getNews()
     @State private var searchTerm = ""
+    func shareNew(new : New) {
+        let activityViewController = UIActivityViewController(activityItems: [new.title, new.url], applicationActivities: nil)
+        UIApplication.shared.windows.first?.rootViewController?.present(activityViewController, animated: true, completion: nil)
+    }
     var body: some View {
         NavigationStack {
                 VStack {
@@ -55,7 +59,7 @@ struct FeedView: View {
                                                 .buttonStyle(.bordered)
                                                 .clipShape(Circle())
                                                 Button{
-                                                    
+                                                    shareNew(new: list.datas[i])
                                                 } label: {
                                                     Image(systemName: "square.and.arrow.up")
                                                 }.buttonStyle(.bordered)

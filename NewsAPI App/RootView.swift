@@ -20,7 +20,7 @@ struct RootView: View {
                         .tabItem {
                             Label("Favourites", systemImage: "suit.heart")
                         }
-                }
+                }.tint(.primary)
                 
             }
         

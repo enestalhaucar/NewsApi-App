@@ -21,17 +21,9 @@ struct New : Identifiable, Hashable {
     let description : String
     
     
-    
     var captionText : String {
         "\(author) • \(relativeDateFormatter.localizedString(for: publishedAt, relativeTo: Date()))"
     }
-}
-
-
-
-
-struct Source {
-    let name : String
 }
 
 class getNews : ObservableObject {
@@ -62,11 +54,7 @@ class getNews : ObservableObject {
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
                 let publishedAt = dateFormatter.date(from: publishedAtString)
-                
-               
-                
-                
-                
+    
                 DispatchQueue.main.async {
                     self.datas.append(New(id: id, author: author, title: title, url: url, publishedAt: publishedAt ?? Date() , urlToImage: image, description: description))
                 }
