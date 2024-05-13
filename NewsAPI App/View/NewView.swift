@@ -9,10 +9,18 @@ import SwiftUI
 import WebKit
 
 struct NewView: View {
+    @EnvironmentObject var savedViewModel : SavedViewModel
     let new : New
     func shareNew() {
         let activityViewController = UIActivityViewController(activityItems: [new.title, new.url], applicationActivities: nil)
         UIApplication.shared.windows.first?.rootViewController?.present(activityViewController, animated: true, completion: nil)
+    }
+    private func toggleBookmark(for new : New) {
+        if savedViewModel.isSaved(for: new) {
+            savedViewModel.removeNew(for: new)
+        }else {
+            savedViewModel.saveNew(for: new)
+        }
     }
     var body: some View {
         
@@ -76,9 +84,9 @@ struct NewView: View {
             }.toolbar{
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        
+                        toggleBookmark(for: new)
                     } label: {
-                        Image(systemName: "bookmark")         
+                        Image(systemName: savedViewModel.isSaved(for: new) ? "bookmark.fill" : "bookmark")
                     }
                     .buttonStyle(.bordered)
                     .clipShape(Circle())
@@ -107,7 +115,9 @@ struct NewView: View {
 
 #Preview {
     NewView(new: New(id: "ss", author: "Enes Talha Uçar", title: "Enes Talha Uçar Appcent Firmasında staja başladı", url: "https://www.appcent.mobi/", publishedAt: Date(), urlToImage: "https://pbs.twimg.com/profile_images/1771829489321828352/2uZEQB2__400x400.jpg", description: "Boğaziçi Üniversitesi Yönetim Bilişim Sistemleri 3. sınıf öğrencisi Enes Talha Uçar, yaz stajı için önde gelen bir yazılım şirketi olan Appcent'te iOS Development Intern pozisyonunda işe başladı. Uçar, mobil uygulama geliştirme konusundaki tutkusu ve teknik yetenekleriyle dikkat çekiyor.Appcent, yenilikçi mobil çözümler geliştiren ve sektördeki öncü projelere imza atan bir firma olarak biliniyor. Enes Talha Uçar, bu prestijli firma bünyesinde iOS platformu üzerindeki projelere katkıda bulunacak ve deneyim kazanacak.Konuyla ilgili açıklamalarda bulunan Uçar, Appcent gibi önde gelen bir firmada iOS geliştirme stajı yapacak olmaktan dolayı çok heyecanlıyım. Boğaziçi Üniversitesi'nde aldığım eğitim ve bu staj deneyimiyle kendimi daha da geliştireceğim. Mobil teknolojiler alanında kariyerime sağlam bir adım atmış olacağım için mutluyum dedi.Enes Talha Uçar'ın Appcent'teki stajı, hem kişisel gelişimi hem de profesyonel kariyeri için önemli bir adım olarak görülüyor. Uçar'ın, mobil uygulama geliştirme alanındaki bilgi ve becerilerini artırması ve sektörde kendine sağlam bir yer edinmesi bekleniyor."))
+        .environmentObject(SavedViewModel())
 }
+
 
 struct WebView : UIViewRepresentable {
     func updateUIView(_ uiView: WKWebView, context: Context) {

@@ -7,7 +7,9 @@
 
 import SwiftUI
 
+
 struct RootView: View {
+    
     var body: some View {
          
             VStack {
@@ -16,11 +18,12 @@ struct RootView: View {
                         .tabItem {
                             Label("News", systemImage: "newspaper")
                         }
-                    FavView()
+                    SavedView()
                         .tabItem {
-                            Label("Favourites", systemImage: "suit.heart")
+                            Label("Saved News", systemImage: "suit.heart")
                         }
                 }.tint(.primary)
+                    
                 
             }
         
@@ -29,4 +32,5 @@ struct RootView: View {
 
 #Preview {
     RootView()
+        .environmentObject(SavedViewModel())
 }

@@ -9,95 +9,113 @@ import SwiftUI
 
 struct FeedView: View {
     @ObservedObject var list = getNews()
+    @EnvironmentObject var savedViewModel : SavedViewModel
     @State private var searchTerm = ""
     func shareNew(new : New) {
         let activityViewController = UIActivityViewController(activityItems: [new.title, new.url], applicationActivities: nil)
         UIApplication.shared.windows.first?.rootViewController?.present(activityViewController, animated: true, completion: nil)
     }
     var body: some View {
-        NavigationStack {
+        ZStack {
+            
+            NavigationStack {
+                
                 VStack {
-                        SearchBar(text: $searchTerm) {
-                            list.datas.removeAll()
-                            list.fetchNews(with: searchTerm)
-                        }
-                        
-                        List {
-                            ForEach(0..<list.datas.count, id: \.self) { i in
-                                NavigationLink(value: list.datas[i]) {
-                                    VStack {
-                                        AsyncImage(url: URL(string: list.datas[i].urlToImage)) { returnedImage in
-                                            returnedImage
-                                                .resizable()
-                                                .aspectRatio(contentMode: .fill)
-                                                .scaledToFit()
-                                        } placeholder: {
-                                            ProgressView()
-                                        }
-                                        VStack(alignment: .leading, spacing: 10) {
-                                            Text(list.datas[i].title)
-                                                .font(.headline)
-                                            Text(list.datas[i].description).lineLimit(1)
-                                                .fontWeight(.light)
-                                                .font(.caption)
-                                                .foregroundStyle(.secondary)
-                                            
-                                            HStack {
-                                                Text(list.datas[i].captionText)
-                                                    .foregroundStyle(.secondary)
-                                                    .font(.caption)
-                                                    .fontWeight(.thin)
-                                                
-                                                Spacer()
-                                                
-                                                Button {
-                                                    
-                                                } label: {
-                                                    Image(systemName: "bookmark")
-                                                        
-                                                }
-                                                .buttonStyle(.bordered)
-                                                .clipShape(Circle())
-                                                Button{
-                                                    shareNew(new: list.datas[i])
-                                                } label: {
-                                                    Image(systemName: "square.and.arrow.up")
-                                                }.buttonStyle(.bordered)
-                                                    .clipShape(Circle())
-                                            }.padding(.top,5)
-                                        }
-                                            
-                                        
-                                        
-                                    }
-                                }
-                                .padding(.bottom, 15)
-                                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                    .listRowSeparator(.hidden)
-                                    
-                            }
-                            
-                            
-                        }
-                        .listStyle(.plain)
-                        .navigationDestination(for: New.self) { new in
-                            NewView(new: new)
-                        }
-                        
-                    }.padding(.vertical)
-                    .navigationTitle("News")
-                    .onAppear {
-                            list.fetchNews()
-                }
-            
+                    SearchBar(text: $searchTerm) {
+                        list.datas.removeAll()
+                        list.fetchNews(with: searchTerm)
+                    }
                     
-            
+                    List {
+                        ForEach(0..<list.datas.count, id: \.self) { i in
+                            NavigationLink(value: list.datas[i]) {
+                                VStack {
+                                    AsyncImage(url: URL(string: list.datas[i].urlToImage)) { returnedImage in
+                                        returnedImage
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fill)
+                                            .scaledToFit()
+                                    } placeholder: {
+                                        ProgressView()
+                                    }
+                                    VStack(alignment: .leading, spacing: 10) {
+                                        Text(list.datas[i].title)
+                                            .font(.headline)
+                                        Text(list.datas[i].description).lineLimit(1)
+                                            .fontWeight(.light)
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                        
+                                        HStack {
+                                            Text(list.datas[i].captionText)
+                                                .foregroundStyle(.secondary)
+                                                .font(.caption)
+                                                .fontWeight(.thin)
+                                            
+                                            Spacer()
+                                            
+                                            Button {
+                                                toggleBookmark(for: list.datas[i])
+                                            } label: {
+                                                Image(systemName: savedViewModel.isSaved(for: list.datas[i]) ? "bookmark.fill" : "bookmark")
+                                                
+                                            }
+                                            .buttonStyle(.bordered)
+                                            .clipShape(Circle())
+                                            Button{
+                                                shareNew(new: list.datas[i])
+                                            } label: {
+                                                Image(systemName: "square.and.arrow.up")
+                                            }.buttonStyle(.bordered)
+                                                .clipShape(Circle())
+                                        }.padding(.top,5)
+                                    }
+                                    
+                                    
+                                    
+                                }
+                            }
+                            .padding(.bottom, 15)
+                            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                            .listRowSeparator(.hidden)
+                            
+                        }
+                        
+                        
+                    }
+                    .listStyle(.plain)
+                    .navigationDestination(for: New.self) { new in
+                        NewView(new: new)
+                    }
+                    
+                }
+                .padding(.vertical)
+                .navigationTitle("News")
+                .onAppear {
+                    list.fetchNews()
+                }
+                
+                
+                
+                
+            }
+        }
+    }
+    
+    private func toggleBookmark(for new : New) {
+        if savedViewModel.isSaved(for: new) {
+            savedViewModel.removeNew(for: new)
+        }else {
+            savedViewModel.saveNew(for: new)
         }
     }
 }
 
 #Preview {
+    
     FeedView()
+        .environmentObject(SavedViewModel())
+    
 }
 
 struct SearchBar: View {

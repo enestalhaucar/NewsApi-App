@@ -15,8 +15,9 @@
 		EC55441B2BF127F400BF290A /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = EC55441A2BF127F400BF290A /* SDWebImageSwiftUI */; };
 		EC5544222BF128EF00BF290A /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5544212BF128EF00BF290A /* DataManager.swift */; };
 		EC5544242BF12DED00BF290A /* FeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5544232BF12DED00BF290A /* FeedView.swift */; };
-		EC5544262BF12FFA00BF290A /* FavView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5544252BF12FFA00BF290A /* FavView.swift */; };
+		EC5544262BF12FFA00BF290A /* SavedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5544252BF12FFA00BF290A /* SavedView.swift */; };
 		EC5544282BF1865900BF290A /* NewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC5544272BF1865900BF290A /* NewView.swift */; };
+		ECA709AF2BF1F2C7003931DD /* SavedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA709AE2BF1F2C7003931DD /* SavedViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,8 +28,9 @@
 		EC47592D2BED2B5F00BE61A4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		EC5544212BF128EF00BF290A /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		EC5544232BF12DED00BF290A /* FeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedView.swift; sourceTree = "<group>"; };
-		EC5544252BF12FFA00BF290A /* FavView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavView.swift; sourceTree = "<group>"; };
+		EC5544252BF12FFA00BF290A /* SavedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedView.swift; sourceTree = "<group>"; };
 		EC5544272BF1865900BF290A /* NewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewView.swift; sourceTree = "<group>"; };
+		ECA709AE2BF1F2C7003931DD /* SavedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,7 +90,7 @@
 			children = (
 				EC5544232BF12DED00BF290A /* FeedView.swift */,
 				EC5544272BF1865900BF290A /* NewView.swift */,
-				EC5544252BF12FFA00BF290A /* FavView.swift */,
+				EC5544252BF12FFA00BF290A /* SavedView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -96,6 +98,7 @@
 		EC55441E2BF128C100BF290A /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				ECA709AE2BF1F2C7003931DD /* SavedViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -186,7 +189,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				EC5544242BF12DED00BF290A /* FeedView.swift in Sources */,
-				EC5544262BF12FFA00BF290A /* FavView.swift in Sources */,
+				EC5544262BF12FFA00BF290A /* SavedView.swift in Sources */,
+				ECA709AF2BF1F2C7003931DD /* SavedViewModel.swift in Sources */,
 				EC4759292BED2B5D00BE61A4 /* RootView.swift in Sources */,
 				EC5544282BF1865900BF290A /* NewView.swift in Sources */,
 				EC5544222BF128EF00BF290A /* DataManager.swift in Sources */,

@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct NewsAPI_AppApp: App {
+    @StateObject var savedViewModel = SavedViewModel()
     var body: some Scene {
         WindowGroup {
             RootView()
+                .environmentObject(SavedViewModel())
         }
     }
 }
