@@ -9,17 +9,20 @@ import SwiftUI
 
 struct SavedView: View {
     @EnvironmentObject var savedViewModel : SavedViewModel
+    @State private var path = NavigationPath()
     var body: some View {
-        NavigationStack {
+        NavigationStack(path : $path) {
             VStack {
                 List {
                     ForEach(savedViewModel.savedNews) { new in
-                        NavigationLink(value: new) {
+                        Button {
+                            path.append(new)
+                        } label: {
                             VStack {
                                 AsyncImage(url: URL(string: new.urlToImage)) { returnedImage in
                                     returnedImage
                                         .resizable()
-                                        .aspectRatio(contentMode: .fill)
+                                        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 4.5)
                                         .scaledToFit()
                                 } placeholder: {
                                     ProgressView()
@@ -41,36 +44,30 @@ struct SavedView: View {
                                         Spacer()
                                         
                                         Button {
-                                            toggleBookmark(for: new)
+                                            savedViewModel.toggleBookmark(for: new)
                                         } label: {
                                             Image(systemName: savedViewModel.isSaved(for: new) ? "bookmark.fill" : "bookmark")
-                                                
+                                            
                                         }
                                         .buttonStyle(.bordered)
                                         .clipShape(Circle())
                                         Button{
-                                            shareNew(new: new)
+                                            savedViewModel.shareNew(new: new)
                                         } label: {
                                             Image(systemName: "square.and.arrow.up")
                                         }.buttonStyle(.bordered)
                                             .clipShape(Circle())
                                     }.padding(.top,5)
-                                }
-                                    
-                                
-                                
+                                }.padding(.horizontal)
                             }
-                        }.listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                        .listRowSeparator(.hidden)
-                        .navigationDestination(for: New.self) { new in
+                            
+                        }.navigationDestination(for: New.self) { new in
                             NewView(new: new)
                         }
-                        .padding(.bottom, 15)
-                        .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                            .listRowSeparator(.hidden)
-                            
+                        .listRowSeparator(.hidden)
                     }
                 }.listStyle(.plain)
+                
                 
                 Spacer()
             }.navigationTitle("Saved News")
@@ -91,8 +88,6 @@ struct SavedView: View {
 }
 
 #Preview {
-
     SavedView()
         .environmentObject(SavedViewModel())
-        
 }

@@ -1,40 +1,40 @@
 //
-//  FeedViewModel.swift
+//  DataManager.swift
 //  NewsAPI App
 //
-//  Created by Enes Talha Uçar  on 13.05.2024.
+//  Created by Enes Talha Uçar  on 12.05.2024.
 //
 
 import Foundation
-import UIKit
-import SwiftUI
-import Combine
 import SwiftyJSON
+import SwiftUI
 
+fileprivate let relativeDateFormatter = RelativeDateTimeFormatter()
 
-@MainActor
-final class FeedViewModel : ObservableObject {
-    @EnvironmentObject var savedViewModel : SavedViewModel
-    func shareNew(new : New) {
-        let activityViewController = UIActivityViewController(activityItems: [new.title, new.url], applicationActivities: nil)
-        UIApplication.shared.windows.first?.rootViewController?.present(activityViewController, animated: true, completion: nil)
-    }
-    func toggleBookmark(for new : New) {
-        if savedViewModel.isSaved(for: new) {
-            savedViewModel.removeNew(for: new)
-        }else {
-            savedViewModel.saveNew(for: new)
-        }
-    }
+struct New : Identifiable, Hashable {
+    var id : String
+    let author : String
+    let title : String
+    let url : String
+    let publishedAt : Date
+    let urlToImage : String
+    let description : String
+    let content : String
     
+    var captionText : String {
+        "\(author) • \(relativeDateFormatter.localizedString(for: publishedAt, relativeTo: Date()))"
+    }
     
 }
 
-
-class NewsViewModel: ObservableObject {
-    @Published var datas: [New] = []
+class getNews : ObservableObject {
+    @Published var datas = [New]()
+    
+    
+    
     @Published var isLoading: Bool = false
     private var currentPage: Int = 1
+    
     
     func fetchNews(with keyword: String = "keyword") {
         guard !isLoading else { return }
@@ -90,4 +90,3 @@ class NewsViewModel: ObservableObject {
         }.resume()
     }
 }
-

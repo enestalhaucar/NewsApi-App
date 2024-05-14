@@ -69,7 +69,6 @@
 			children = (
 				EC4759262BED2B5D00BE61A4 /* NewsAPI_AppApp.swift */,
 				EC4759282BED2B5D00BE61A4 /* RootView.swift */,
-				EC5544212BF128EF00BF290A /* DataManager.swift */,
 				EC55441F2BF128CD00BF290A /* Model */,
 				EC55441E2BF128C100BF290A /* ViewModel */,
 				EC55441C2BF1289D00BF290A /* View */,
@@ -109,6 +108,7 @@
 		EC55441F2BF128CD00BF290A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				EC5544212BF128EF00BF290A /* DataManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";

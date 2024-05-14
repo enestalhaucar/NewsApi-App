@@ -12,7 +12,8 @@ import UIKit
 @MainActor
 class SavedViewModel : ObservableObject {
     @Published private(set) var savedNews : [New] = []
-    
+
+  
     func isSaved(for new : New) -> Bool {
         savedNews.first {new.id == $0.id} != nil
     }
