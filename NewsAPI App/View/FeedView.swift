@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FeedView: View {
-    @StateObject private var list = getNews()
+    @StateObject private var list = FeedViewModel()
     @EnvironmentObject var savedViewModel : SavedViewModel
     @State private var searchTerm: String = ""
     @State private var path = NavigationPath()
@@ -98,6 +98,8 @@ struct FeedView: View {
         .environmentObject(SavedViewModel())
 }
 
+
+// MARK: Search Bar View
 struct SearchBar: View {
     @Binding var text: String
     var onSearchButtonClicked: () -> Void
